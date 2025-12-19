@@ -83,4 +83,5 @@ if __name__ == "__main__":
     process_split(val_files, 'val', OUT_PATH, genres)
     process_split(test_files, 'test', OUT_PATH, genres)
     
+    print("\n")
     print("PREPROCESSING COMPLETE. TRAINING READY.")
