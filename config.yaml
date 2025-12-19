@@ -1,0 +1,27 @@
+project:
+  name: "gtzan_transfer_study"
+  seed: 42  # "Random Seed: random_state=42 for all runs"
+  output_dir: "./outputs"
+
+data:
+  root: "./data/processed"
+  num_classes: 10
+  batch_size: 32    
+  num_workers: 4     # Adjust based on cores 
+
+experiment:
+  # These are defaults, will likely override them via argparse
+  model_arch: "resnet50"       # 'resnet50' or 'vit_b_16'
+  freeze_mode: "freeze_none"   # Change per experiment
+
+training:
+  epochs: 20            # "Epochs: 20"
+  learning_rate: 0.001  # "Optimizer: SGD with learning_rate=0.001"
+  momentum: 0.9         # "momentum=0.9"
+  device: "cuda"        # Automatic fallback to cpu handled in train.py
+
+augmentation:
+  enabled: false        
+  spec_augment:
+    time_mask: 30
+    freq_mask: 20
