@@ -1,0 +1,24 @@
+# ENV
+*.pyc
+venv/
+.env
+.ipynb_checkpoints/
+
+# DATA, OUTPUTS
+data/
+processed_data/
+outputs/
+checkpoints/
+*.pt
+*.pth
+
+# CONFIG
+kaggle.json
+config_local.yaml
+
+# IDE
+.vscode/
+
+# LOGS
+*.log
+runs/
