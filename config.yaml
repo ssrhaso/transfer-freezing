@@ -1,3 +1,5 @@
+# HYPERPARAMETERS CONFIGURATION FILE
+
 project:
   name: "gtzan_transfer_study"
   seed: 42  # "Random Seed: random_state=42 for all runs"
