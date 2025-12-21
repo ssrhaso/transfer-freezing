@@ -142,7 +142,7 @@ def main():
         num_workers = cfg['data']['num_workers'],
     )
     
-    print(" LOADED DATASETS: ")
+    print("LOADED DATASETS : ")
     print(f"TRAIN : {len(train_ds)} | VAL : {len(val_ds)} | TEST : {len(test_ds)}\n")
     
     
