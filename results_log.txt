@@ -1,0 +1,6 @@
+resnet50,freeze_0,61.00
+resnet50,freeze_0_1,57.00
+resnet50,freeze_0_1_2,63.00
+resnet50,freeze_0_1_2_3,56.00
+resnet50,freeze_0_1_2_3_4,52.00
+resnet50,freeze_none,57.00
