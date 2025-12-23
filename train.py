@@ -9,7 +9,7 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 # CUSTOM MODULES
-from scripts.preprocess_data import GTZANDataset
+from dataset import GTZANDataset
 from scripts.models import AudioResNet50, AudioViT
 
 def load_config(
@@ -117,9 +117,9 @@ def main():
     
     # DATA LOADERS
     print(" LOADING DATSETS")
-    train_ds = GTZANDataset(cfg['data']['root'], split = 'train', argument = cfg['augmentation']['enabled'])
-    val_ds = GTZANDataset(cfg['data']['root'], split = 'val', argument = False)
-    test_ds = GTZANDataset(cfg['data']['root'], split = 'test', argument = False)
+    train_ds = GTZANDataset(cfg['data']['root'], split = 'train', augment = cfg['augmentation']['enabled'])
+    val_ds = GTZANDataset(cfg['data']['root'], split = 'val', augment = False)
+    test_ds = GTZANDataset(cfg['data']['root'], split = 'test', augment = False)
     
     train_loader = DataLoader(
         train_ds,
@@ -144,11 +144,81 @@ def main():
     
     print("LOADED DATASETS : ")
     print(f"TRAIN : {len(train_ds)} | VAL : {len(val_ds)} | TEST : {len(test_ds)}\n")
+
+    
+    print("\n BUILDING MODEL (this may take 1-2 min on first run)...")
+    import sys
+    sys.stdout.flush()  # Force print to show immediately
+
+    # 5. Initialize Model
+    if model_name == 'resnet50':
+        print("   - Loading ResNet50 architecture...")
+        sys.stdout.flush()
+        model = AudioResNet50(freeze_mode=freeze_mode, num_classes=cfg['data']['num_classes'])
+    elif model_name == 'vit_b_16':
+        print("   - Loading ViT-B/16 architecture...")
+        sys.stdout.flush()
+        model = AudioViT(freeze_mode=freeze_mode, num_classes=cfg['data']['num_classes'])
+    else:
+        raise ValueError(f"Unknown model: {model_name}")
+
+    print("   MODEL LOADED")
+    sys.stdout.flush()
+    
+    # Move model to GPU
+    model = model.to(device)
+    
+    # Count trainable parameters
+    trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(f"TRAINABLE PARAMETERS {trainable_params:,}\n")
+    
+    # Setup Optimizer & Loss
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.SGD(
+        filter(lambda p: p.requires_grad, model.parameters()),
+        lr=cfg['training']['learning_rate'],
+        momentum=cfg['training']['momentum']
+    )
+    
+    # Training Loop
+    print(f"TRAINING FOR {cfg['training']['epochs']} epochs...\n")
+    best_val_acc = 0.0
+    
+    for epoch in range(cfg['training']['epochs']):
+        train_loss, train_acc = train_one(model, train_loader, criterion, optimizer, device)
+        val_loss, val_acc = evaluate(model, val_loader, criterion, device)
+        
+        print(f"Epoch [{epoch+1:2d}/{cfg['training']['epochs']}] | "
+              f"Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.2f}% | "
+              f"Val Loss: {val_loss:.4f} | Val Acc: {val_acc:.2f}%")
+        
+        # Save best model
+        if val_acc > best_val_acc:
+            best_val_acc = val_acc
+            save_path = f"{cfg['project']['output_dir']}/best_{model_name}_{freeze_mode}.pth"
+            torch.save(model.state_dict(), save_path)
+            print(f"   BEST MODEL SAVED (Val Acc: {val_acc:.2f}%)")
+        
+    
+    # Test evaluation
+    print("\nTEST SET EVALUATION:")
+    model.load_state_dict(torch.load(f"{cfg['project']['output_dir']}/best_{model_name}_{freeze_mode}.pth"))
+    test_loss, test_acc = evaluate(model, test_loader, criterion, device)
+      
+    print(f"\nRESULTS:")
+    print(f"   Model: {model_name}")
+    print(f"   Freeze Mode: {freeze_mode}")
+    print(f"   Test Accuracy: {test_acc:.2f}%\n")
+        
+    # Log results
+    with open("results_log.txt", "a") as f:
+        f.write(f"{model_name},{freeze_mode},{test_acc:.2f}\n")
+
     
     
     
     
-    
+      
 
     
 
