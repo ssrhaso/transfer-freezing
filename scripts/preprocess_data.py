@@ -30,30 +30,32 @@ def resize_spec(spec, size=(224, 224)):
     return cv2.resize(spec, dsize=size, interpolation=cv2.INTER_LINEAR)
 
 def process_split(files, split_name, output_root, genres):
-    """
-    Processes a list of files and saves them to the disk.
-    """
     save_dir = os.path.join(output_root, split_name)
     os.makedirs(save_dir, exist_ok=True)
     
     for f in tqdm(files, desc=f"Processing {split_name}"):
         try:
-            genre = f.split('/')[-2]
+            genre = os.path.basename(os.path.dirname(f))  # FIX: Use os methods
             label = genres.index(genre)
             
             # Compute & Resize
             spec = get_log_melspec(f)
             spec_resized = resize_spec(spec)
             
-            # Save as Tensor
-            data = torch.tensor(spec_resized, dtype=torch.float32)
+            # Normalize to [0, 1] BEFORE saving
+            spec_min = spec_resized.min()
+            spec_max = spec_resized.max()
+            spec_normalized = (spec_resized - spec_min) / (spec_max - spec_min + 1e-8)
+            
+            # Save as Tensor (now in [0, 1] range like images)
+            data = torch.tensor(spec_normalized, dtype=torch.float32)
             fname = f"{genre}_{os.path.basename(f).replace('.wav', '.pt')}"
             
-            # We save both the image (data) and the answer (label) in one file
             torch.save({'data': data, 'label': label}, os.path.join(save_dir, fname))
             
         except Exception as e:
             print(f" Error {f}: {e}")
+
 
 if __name__ == "__main__":
     # PATHS
