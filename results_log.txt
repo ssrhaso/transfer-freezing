@@ -4,3 +4,8 @@ resnet50,freeze_0_1_2,63.00
 resnet50,freeze_0_1_2_3,56.00
 resnet50,freeze_0_1_2_3_4,52.00
 resnet50,freeze_none,57.00
+vit_b_16,freeze_none,65.00
+vit_b_16,freeze_patch,73.00
+vit_b_16,freeze_patch_0_2,75.00
+vit_b_16,freeze_patch_0_5,72.00
+vit_b_16,freeze_patch_0_11,63.00
