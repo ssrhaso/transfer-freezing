@@ -66,7 +66,7 @@ class AudioViT(nn.Module):
     def __init__(self, freeze_mode='freeze_none', num_classes=10):
         super().__init__()
         
-        weights = ViT_B_16_Weights.IMAGENET1K_SWAG_E2E_V1
+        weights = ViT_B_16_Weights.IMAGENET1K_V1
         self.model = vit_b_16(weights=weights)
         self._freeze_layers(freeze_mode)
         self.model.heads = nn.Linear(768, num_classes)
