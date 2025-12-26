@@ -10,5 +10,6 @@ pyyaml>=6.0
 tqdm
 kaggle  # DOWNLOAD DATA SCRIPT
 opencv-python-headless  #RESIZING
+seaborn>=0.12.0
 
 
