@@ -25,6 +25,6 @@ done
 echo " TRAINING COMPLETE. GENERATING PLOT..."
 
 # 2. Run the plotting script for this seed
-python analysis/plot_seed_sweeps.py --seed "$SEED"
+python analysis/plot.py --seed "$SEED"
 
 echo " DONE! CHECK outputs/results/plots/seed${SEED}_vit_barplot.png"
