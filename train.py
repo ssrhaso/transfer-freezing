@@ -96,6 +96,7 @@ def main():
     # CL ARGUMENT PARSING
     
     parser = argparse.ArgumentParser(description = "Train GTZAN Genre Classifier")
+    parser.add_argument('--seed', type = int, default = None, help = 'Override random seed from config')
     parser.add_argument('--config', type = str, required = True, default = 'config.yaml', help = 'Path to config YAML file')
     parser.add_argument('--model', type = str, required = True, choices = ['resnet50', 'vit_b_16'], help = 'Model architecture')
     parser.add_argument('--freeze_mode', type = str, help = 'Layer freezing strategy')
@@ -107,12 +108,12 @@ def main():
     # OVERRIDE WITH CL ARGS
     model_name = args.model if args.model else cfg['experiment']['model_arch']
     freeze_mode = args.freeze_mode if args.freeze_mode else cfg['experiment']['freeze_mode']
+    seed = args.seed if args.seed is not None else cfg['project']['seed']
+    set_seed(seed)
     
     # SETUP ENV
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    print(f"\nEXPERIMENT: \n          MODEL :{model_name} | FREEZE MODE: {freeze_mode} | DEVICE: {device}\n")
-    
-    set_seed(cfg['project']['seed'])
+    print(f"\nEXPERIMENT: \n          MODEL :{model_name} | FREEZE MODE: {freeze_mode} | DEVICE: {device} | SEED: {seed}\n")
     os.makedirs(cfg['project']['output_dir'], exist_ok = True)
     
     # DATA LOADERS
