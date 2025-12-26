@@ -196,14 +196,22 @@ def main():
         # Save best model
         if val_acc > best_val_acc:
             best_val_acc = val_acc
-            save_path = f"{cfg['project']['output_dir']}/best_{model_name}_{freeze_mode}.pth"
+            ckpt_dir = os.path.join(cfg['project']['output_dir'], 'checkpoints', model_name, freeze_mode)
+            os.makedirs(ckpt_dir, exist_ok=True)
+            
+            # Include SEED in filename
+            save_path = os.path.join(ckpt_dir, f"best_{model_name}_seed{seed}_freeze{freeze_mode}.pth")
+
             torch.save(model.state_dict(), save_path)
             print(f"   BEST MODEL SAVED (Val Acc: {val_acc:.2f}%)")
+
         
     
     # Test evaluation
     print("\nTEST SET EVALUATION:")
-    model.load_state_dict(torch.load(f"{cfg['project']['output_dir']}/best_{model_name}_{freeze_mode}.pth"))
+    best_ckpt_path = os.path.join(cfg['project']['output_dir'], 'checkpoints', model_name, freeze_mode, f"best_{model_name}_seed{seed}_freeze{freeze_mode}.pth")
+    model.load_state_dict(torch.load(best_ckpt_path))
+
     test_loss, test_acc = evaluate(model, test_loader, criterion, device)
       
     print(f"\nRESULTS:")
@@ -211,9 +219,35 @@ def main():
     print(f"   Freeze Mode: {freeze_mode}")
     print(f"   Test Accuracy: {test_acc:.2f}%\n")
         
+
     # Log results
-    with open("results_log.txt", "a") as f:
-        f.write(f"{model_name},{freeze_mode},{test_acc:.2f}\n")
+    import csv
+    from datetime import datetime
+    
+    # Create results directory
+    results_dir = os.path.join(cfg['project']['output_dir'], "results")
+    os.makedirs(results_dir, exist_ok=True)
+    summary_csv = os.path.join(results_dir, "results_summary.csv")
+
+    # Write header if file doesn't exist
+    file_exists = os.path.isfile(summary_csv)
+    with open(summary_csv, "a", newline="") as f:
+        writer = csv.writer(f)
+        if not file_exists:
+            writer.writerow(["timestamp", "model", "freeze_mode", "seed", "best_val_acc", "test_acc"])
+        
+        # Write the actual result row
+        writer.writerow([
+            datetime.now().isoformat(), 
+            model_name, 
+            freeze_mode, 
+            seed, 
+            f"{best_val_acc:.2f}", 
+            f"{test_acc:.2f}"
+        ])
+    print(f"Results saved to {summary_csv}")
+
+
 
     
     
