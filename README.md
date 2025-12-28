@@ -9,12 +9,17 @@ This repository contains the codebase and experimental results for a study inves
 Contrary to standard practices in Convolutional Neural Networks (CNNs) where freezing early layers is monotonic in effect, our large-scale evaluation (**N=10 random seeds**) reveals a non-monotonic **"dip-and-recover"** phenomenon in Transformers. While partial freezing generally degrades performance, we observe a statistically significant recovery in accuracy when freezing the first 50% of the network, suggesting distinct feature adaptation dynamics in attention-based architectures compared to CNNs.
 
 ## KEY FINDINGS
+
 We evaluated five distinct freezing configurations. The aggregated results (Mean ± Std Dev) indicate:
+
+| Freezing Strategy | Description | Performance Trend |
+| :--- | :--- | :--- |
 | **Freeze None** | Full Fine-Tuning (All parameters trainable) | Solid Baseline (~71.6%) |
 | **Freeze Patch** | Freezing only Embeddings + Positional Encoding | **Performance Dip (~69.1%)** |
 | **Freeze 0.2** | Freezing first 20% of Encoder Blocks | Recovery (~71.1%) |
 | **Freeze 0.5** | Freezing first 50% of Encoder Blocks | **Highest Accuracy (~73.2%)** |
 | **Freeze 0.9** | Freezing ~90% (Classifier only) | Performance Collapse (~63.1%) |
+
 ![ViT Freezing Analysis Plot](outputs/results/plots/vit_freezing_analysis_n10.png)
 
 ## REPOSITORY STRUCTURE
