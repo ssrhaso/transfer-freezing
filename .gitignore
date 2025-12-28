@@ -7,7 +7,7 @@ venv/
 # DATA, OUTPUTS
 data/
 processed_data/
-outputs/
+outputs/results/logs
 checkpoints/
 *.pt
 *.pth
