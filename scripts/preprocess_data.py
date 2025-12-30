@@ -10,6 +10,7 @@ from tqdm import tqdm
 def get_log_melspec(audio_path, sr=22050):
     """
     Converts audio to a Log-Mel Spectrogram.
+
     Explanations:
     - sr=22050: Standard sample rate for music analysis.
     - n_fft=2048: Window size for Fourier Transform (time resolution).
@@ -20,7 +21,7 @@ def get_log_melspec(audio_path, sr=22050):
     melspec = librosa.feature.melspectrogram(
         y=y, sr=sr, n_fft=2048, hop_length=512, n_mels=128
     )
-    return np.log1p(melspec)  # Log-scaling makes weak sounds visible
+    return np.log1p(melspec)  # Log-scaling makes weak sounds visible (HUMAN PERCEPTION IS LOGARITHMIC)
 
 def resize_spec(spec, size=(224, 224)):
     """
