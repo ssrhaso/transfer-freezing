@@ -182,6 +182,11 @@ def main():
         momentum=cfg['training']['momentum']
     )
     
+    scheduler = optim.lr_scheduler.CosineAnnealingLR(
+        optimizer,
+        T_max=cfg['training']['epochs']
+    )
+
     # Training Loop
     print(f"TRAINING FOR {cfg['training']['epochs']} epochs...\n")
     best_val_acc = 0.0
@@ -189,6 +194,8 @@ def main():
     for epoch in range(cfg['training']['epochs']):
         train_loss, train_acc = train_one(model, train_loader, criterion, optimizer, device)
         val_loss, val_acc = evaluate(model, val_loader, criterion, device)
+
+        scheduler.step()
         
         print(f"Epoch [{epoch+1:2d}/{cfg['training']['epochs']}] | "
               f"Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.2f}% | "
