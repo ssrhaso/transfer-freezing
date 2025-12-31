@@ -1,4 +1,4 @@
-# HYPERPARAMETERS CONFIGURATION FILE
+    # HYPERPARAMETERS CONFIGURATION FILE
 
 project:
   name: "gtzan_transfer_study"
@@ -23,7 +23,9 @@ training:
   device: "cuda"        # Automatic fallback to cpu handled in train.py
 
 augmentation:
-  enabled: false        
+  enabled: true        
   spec_augment:
     time_mask: 30
     freq_mask: 20
+  time_shift: 10
+
