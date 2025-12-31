@@ -25,7 +25,8 @@ training:
 augmentation:
   enabled: true        
   spec_augment:
-    time_mask: 30
-    freq_mask: 20
+    time_mask: 22 # 10% of 224 = 22 frames (upper bound optimal range)
+    freq_mask: 45 # 20% of 224 = 45 pixels (upper bound optimal range)
   time_shift: 10
+
 
