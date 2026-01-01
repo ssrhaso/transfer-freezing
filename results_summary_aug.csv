@@ -1,0 +1,7 @@
+timestamp,model,freeze_mode,seed,best_val_acc,test_acc
+2025-12-31T15:57:53.727620,vit_b_16_aug,freeze_none,1,84.00,76.00
+2025-12-31T16:21:17.868363,vit_b_16_aug,freeze_none,5,81.00,76.00
+2025-12-31T16:44:39.752422,vit_b_16_aug,freeze_none,10,84.00,77.00
+2025-12-31T17:08:04.065608,vit_b_16_aug,freeze_none,15,79.00,77.00
+2025-12-31T17:31:33.791802,vit_b_16_aug,freeze_none,20,83.00,79.00
+2025-12-31T17:54:58.469752,vit_b_16_aug,freeze_none,25,82.00,74.00
