@@ -1,0 +1,6 @@
+timestamp,model,freeze_mode,seed,best_val_acc,test_acc
+2026-01-01T10:14:29.454553,vit_b_16_aug,freeze_patch,1,79.00,71.00
+2026-01-01T10:24:57.600312,vit_b_16_aug,freeze_patch_0_2,1,79.00,68.00
+2026-01-01T10:35:02.286821,vit_b_16_aug,freeze_patch_0_5,1,74.00,69.00
+2026-01-01T10:44:39.173647,vit_b_16_aug,freeze_patch_0_8,1,70.00,66.00
+2026-01-01T10:49:34.417093,vit_b_16_aug,freeze_patch_0_11,1,63.00,56.00
